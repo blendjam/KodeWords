@@ -5,7 +5,6 @@ import "./Game.css";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { WordType } from "types/types";
-import { ppid } from "process";
 
 function RNG(s: number) {
   s = Math.sin(s) * 10000;
