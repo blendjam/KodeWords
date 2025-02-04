@@ -1,7 +1,8 @@
 import "./Card.css";
 import { CardProps } from "../types/types";
 import React, { useEffect, useReducer, useState } from "react";
-import { IMGPATH } from "./Linker";
+
+const IMGPATH = "";
 
 const Card = ({ word, type, clickable, id }: CardProps) => {
   const [cardType, setCardType] = useState(type);
@@ -29,11 +30,7 @@ const Card = ({ word, type, clickable, id }: CardProps) => {
   const totalAgents = type == "gray" ? 5 : 8;
   const offsetFactor = 100 / totalAgents;
   return (
-    <div
-      className="Card"
-      style={{ cursor: clickable ? "pointer" : "default" }}
-      onClick={onCardClick}
-    >
+    <div className="Card" style={{ cursor: clickable ? "pointer" : "default" }} onClick={onCardClick}>
       <img src={cardImage} alt={`Card_${type}`} className="CardImage" />
       {!click ? (
         <>
