@@ -1,12 +1,12 @@
 .Card {
   position: relative;
-  width: 12rem;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .CardImage {
-  width: 12rem;
+  width: 12vw;
   object-fit: cover;
 }
 
@@ -26,16 +26,16 @@
   top: 34%;
   left: 40%;
   transform: translate(-50%, -50%);
-  font-size: 0.8rem;
+  font-size: 0.8vw;
   font-weight: bolder;
   color: rgba(0, 0, 0, 0.5);
 }
 
 .CardWord {
   position: absolute;
-  bottom: 10%;
+  bottom: 5%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 1.2rem;
+  font-size: 1.4vw;
   font-weight: 900;
 }

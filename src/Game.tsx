@@ -15,6 +15,7 @@ const Game = () => {
   const { role, roomid } = useParams();
   const [shuffledWords, setShuffledWords] = useState<Array<WordType>>([]);
   const [firstTurn, setFirstTurn] = useState<"red" | "blue">(RNG(Number(roomid)) > 0.5 ? "red" : "blue");
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
     const randomWordList: Array<string> = [];
@@ -59,7 +60,25 @@ const Game = () => {
           <button className="Button">HOME</button>
         </Link>
         <h1 className="Role">{role?.toUpperCase()}</h1>
-        <h3 className="Roomid">Room ID: {roomid}</h3>
+        <div style={{ display: "flex" }}>
+          <h3 className="Roomid">Room ID: {roomid}</h3>
+          <button
+            onClick={() => {
+              const isMobile = window.innerWidth < 768;
+              setIsFullScreen(!isFullScreen);
+              isFullScreen ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+
+              if (isMobile) {
+                isFullScreen
+                  ? window.screen.orientation.unlock()
+                  : // @ts-ignored
+                    window.screen.orientation.lock("landscape-primary");
+              }
+            }}
+            className="fullscreen">
+            <img src="KodeWords/assets/icon/fullscreen.png" />
+          </button>
+        </div>
       </nav>
       <div className="GameContainer">
         <div className="GridHeader">
