@@ -1,7 +1,8 @@
 import "./Card.css";
 import { CardProps } from "../types/types";
 import React, { useEffect, useReducer, useState } from "react";
-import { IMGPATH } from "./Linker";
+
+const IMGPATH = "/KodeWords";
 
 const Card = ({ word, type, clickable, id }: CardProps) => {
   const [cardType, setCardType] = useState(type);
