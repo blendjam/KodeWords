@@ -1,6 +1,7 @@
 {
   "name": "codenames",
   "version": "0.1.0",
+  "homepage": "/KodeWords",
   "private": true,
   "dependencies": {
     "@types/jest": "^29.5.14",
