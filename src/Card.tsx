@@ -29,7 +29,11 @@ const Card = ({ word, type, clickable, id }: CardProps) => {
   const totalAgents = type == "gray" ? 5 : 8;
   const offsetFactor = 100 / totalAgents;
   return (
-    <div className="Card" style={{ cursor: clickable ? "pointer" : "default" }} onClick={onCardClick}>
+    <div
+      className="Card"
+      style={{ cursor: clickable ? "pointer" : "default" }}
+      onClick={onCardClick}
+    >
       <img src={cardImage} alt={`Card_${type}`} className="CardImage" />
       {!click ? (
         <>
