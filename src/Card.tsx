@@ -2,7 +2,7 @@ import "./Card.css";
 import { CardProps } from "../types/types";
 import React, { useEffect, useReducer, useState } from "react";
 
-const IMGPATH = "";
+const IMGPATH = "/KodeWords";
 
 const Card = ({ word, type, clickable, id }: CardProps) => {
   const [cardType, setCardType] = useState(type);
