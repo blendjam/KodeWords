@@ -66,7 +66,7 @@ const Game = () => {
           <h3 className="Roomid">Room ID: {roomid}</h3>
           <button
             onClick={() => {
-              const isMobile = window.innerWidth < 768;
+              const isMobile = window.innerWidth < 868;
               setIsFullScreen(!isFullScreen);
               isFullScreen ? document.exitFullscreen() : document.documentElement.requestFullscreen();
 
