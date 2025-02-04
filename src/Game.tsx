@@ -39,19 +39,21 @@ const Game = () => {
     const blackWord = randomWordList[16];
 
     const tempWords = [...redWords.map((word, i) => ({ word, type: "red", id: i })), ...blueWords.map((word, i) => ({ word, type: "blue", id: i })), { word: blackWord, type: "black" }, ...grayWords.map((word, i) => ({ word, type: "gray", id: i }))];
-    setShuffledWords(tempWords);
     setFirstTurn(RNG(Number(roomid) * 10) > 0.5 ? "red" : "blue");
+
+    const temp_list = tempWords;
+    for (let i = 0; i < temp_list.length; i++) {
+      const j = Math.floor(RNG(Number(roomid) + i) * 100) % temp_list.length;
+      const temp = temp_list[i];
+      temp_list[i] = temp_list[j];
+      temp_list[j] = temp;
+    }
+    setShuffledWords(temp_list);
   }, []);
+
   useEffect(() => {
     document.documentElement.style.setProperty("--base", `radial-gradient(circle, ${firstTurn == "red" ? "#e48957" : "#8fc0ef"}, ${firstTurn == "red" ? "#461408" : "#113154"})`);
   }, [firstTurn]);
-
-  for (let i = 0; i < shuffledWords.length; i++) {
-    const j = Math.floor(RNG(Number(roomid) + i) * 100) % shuffledWords.length;
-    const temp = shuffledWords[i];
-    shuffledWords[i] = shuffledWords[j];
-    shuffledWords[j] = temp;
-  }
 
   return (
     <div className="Game">
@@ -76,7 +78,7 @@ const Game = () => {
               }
             }}
             className="fullscreen">
-            <img src="KodeWords/assets/icon/fullscreen.png" />
+            <img src="/KodeWords/assets/icon/fullscreen.png" />
           </button>
         </div>
       </nav>
