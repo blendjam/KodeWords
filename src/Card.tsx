@@ -4,6 +4,10 @@ import React, { useEffect, useReducer, useState } from "react";
 
 const IMGPATH = "/KodeWords";
 
+function capitalizeFirstLetter(val: string) {
+  return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+}
+
 const Card = ({ word, type, showColor, id }: CardProps) => {
   const [flipped, setFlipped] = useState(false);
 
@@ -28,9 +32,11 @@ const Card = ({ word, type, showColor, id }: CardProps) => {
       {!flipped ? (
         <>
           <h2 className="CardType">{card_type.toUpperCase()}</h2>
-          <h1 className="CardWord" style={{ color: fontColor }}>
-            {word}
-          </h1>
+          <div className="WordContainer">
+            <h1 className="CardWord" style={{ color: fontColor }}>
+              {capitalizeFirstLetter(word)}
+            </h1>
+          </div>
         </>
       ) : (
         <div style={{ backgroundImage: `url(${IMGPATH}/assets/agent/${type}.png)`, backgroundPositionY: `${(Number(id) % totalAgents) * offsetFactor}%` }} className="CardAgent" />

@@ -11,19 +11,19 @@ const Home = () => {
   };
 
   const onRandomButtonClick = () => {
-    const randomRoomid = Math.floor(1000 + Math.random() * 90000).toString();
+    const randomRoomid = Math.floor(100 + Math.random() * 9000).toString();
     setRoomid(randomRoomid);
   };
   const onLinkClick = (role: string, event: any) => {
     if (roomid === "") {
-      const randomRoomid = Math.floor(1000 + Math.random() * 90000).toString();
+      const randomRoomid = Math.floor(100 + Math.random() * 9000).toString();
       setRoomid(randomRoomid);
       event.preventDefault();
       navigate(`/game/${role}/${randomRoomid}`);
     }
   };
   useEffect(() => {
-    document.documentElement.style.setProperty("--base", "radial-gradient(circle, #2f2f2f 0%, #222 100%)");
+    document.documentElement.style.setProperty("--base", "radial-gradient(circle,#383838 0%, #2f2f2f 100%)");
   }, []);
   return (
     <div className="Home">
