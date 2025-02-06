@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/KodeWords/static/css/main.86bb185b.css",
-    "main.js": "/KodeWords/static/js/main.4365f051.js",
+    "main.css": "/KodeWords/static/css/main.7e75ded0.css",
+    "main.js": "/KodeWords/static/js/main.04a5b6e2.js",
     "static/media/nunito-latin-600italic.woff": "/KodeWords/static/media/nunito-latin-600italic.90367a7e9657410d4b41.woff",
     "static/media/nunito-latin-900italic.woff": "/KodeWords/static/media/nunito-latin-900italic.02a2b409ce7bbc6e9ba9.woff",
     "static/media/nunito-latin-700italic.woff": "/KodeWords/static/media/nunito-latin-700italic.9f973b986df693b6804f.woff",
@@ -33,11 +33,11 @@
     "static/media/nunito-latin-300.woff2": "/KodeWords/static/media/nunito-latin-300.b959e8d004563d8cd96d.woff2",
     "static/media/league-spartan-700.woff2": "/KodeWords/static/media/league-spartan-700.c361e347e1ea03d250a5.woff2",
     "index.html": "/KodeWords/index.html",
-    "main.86bb185b.css.map": "/KodeWords/static/css/main.86bb185b.css.map",
-    "main.4365f051.js.map": "/KodeWords/static/js/main.4365f051.js.map"
+    "main.7e75ded0.css.map": "/KodeWords/static/css/main.7e75ded0.css.map",
+    "main.04a5b6e2.js.map": "/KodeWords/static/js/main.04a5b6e2.js.map"
   },
   "entrypoints": [
-    "static/css/main.86bb185b.css",
-    "static/js/main.4365f051.js"
+    "static/css/main.7e75ded0.css",
+    "static/js/main.04a5b6e2.js"
   ]
 }
