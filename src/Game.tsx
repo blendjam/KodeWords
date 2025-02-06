@@ -34,7 +34,6 @@ const Game = () => {
       const r2 = Math.floor(RNG(r1 + i)() * wordList.classic.length);
       const r3 = RNG(r1 + r2)() * wordList.classic.length;
       const index = Math.floor(r3) % wordList.classic.length;
-      console.log(r1, r2, index);
       const word = wordList.classic[index];
       if (!randomWordList.includes(word)) {
         randomWordList.push(word);
