@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/KodeWords/static/css/main.c3067da9.css",
-    "main.js": "/KodeWords/static/js/main.9ffa0edd.js",
+    "main.js": "/KodeWords/static/js/main.0492f015.js",
     "static/media/nunito-latin-600italic.woff": "/KodeWords/static/media/nunito-latin-600italic.90367a7e9657410d4b41.woff",
     "static/media/nunito-latin-900italic.woff": "/KodeWords/static/media/nunito-latin-900italic.02a2b409ce7bbc6e9ba9.woff",
     "static/media/nunito-latin-700italic.woff": "/KodeWords/static/media/nunito-latin-700italic.9f973b986df693b6804f.woff",
@@ -34,10 +34,10 @@
     "static/media/league-spartan-700.woff2": "/KodeWords/static/media/league-spartan-700.c361e347e1ea03d250a5.woff2",
     "index.html": "/KodeWords/index.html",
     "main.c3067da9.css.map": "/KodeWords/static/css/main.c3067da9.css.map",
-    "main.9ffa0edd.js.map": "/KodeWords/static/js/main.9ffa0edd.js.map"
+    "main.0492f015.js.map": "/KodeWords/static/js/main.0492f015.js.map"
   },
   "entrypoints": [
     "static/css/main.c3067da9.css",
-    "static/js/main.9ffa0edd.js"
+    "static/js/main.0492f015.js"
   ]
 }
