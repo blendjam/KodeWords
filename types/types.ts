@@ -1,9 +1,9 @@
 type CardProps = {
-  word:string,
-  type : string
-  clickable?: boolean
-  id?: number
-}
+  word: string;
+  type: string;
+  showColor?: boolean;
+  id?: number;
+};
 
 type WordType = {
   word: string;
@@ -11,4 +11,4 @@ type WordType = {
   id?: number;
 };
 
-export {CardProps, WordType};
+export { CardProps, WordType };

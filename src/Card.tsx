@@ -4,37 +4,30 @@ import React, { useEffect, useReducer, useState } from "react";
 
 const IMGPATH = "/KodeWords";
 
-const Card = ({ word, type, clickable, id }: CardProps) => {
-  const [cardType, setCardType] = useState(type);
-  const [cardImage, setCardImage] = useState(IMGPATH + "/assets/card/gray.png");
-  const [click, setClick] = useState(false);
+const Card = ({ word, type, showColor, id }: CardProps) => {
+  const [flipped, setFlipped] = useState(false);
 
-  useEffect(() => {
-    let card_type = clickable ? "gray" : type;
-    setCardImage(`${IMGPATH}/assets/card/${card_type}.png`);
-    card_type = card_type == "black" ? "assassin" : card_type;
-    card_type = card_type == "gray" ? "neutral" : card_type;
-    setCardType(card_type);
-  }, [type]);
-
-  const onCardClick = () => {
-    if (clickable) {
-      setClick(!click);
-      // transform: rotatex(55deg) translatez(42px);
-      const cardSrc = click ? `${IMGPATH}/assets/card/gray.png` : `${IMGPATH}/assets/bg/${type}.png`;
-      setCardImage(cardSrc);
-    }
-  };
-
-  const fontColor = !clickable && type == "black" ? "white" : "black";
+  const fontColor = showColor && type == "black" ? "white" : "black";
   const totalAgents = type == "gray" ? 5 : 8;
   const offsetFactor = 100 / totalAgents;
+
+  const originalType = showColor ? type : "gray";
+  let card_type = !flipped ? "gray" : originalType;
+  card_type = card_type == "black" ? "assassin" : card_type;
+  card_type = card_type == "gray" ? "neutral" : card_type;
+
+  const cardSrc = !flipped ? `${IMGPATH}/assets/card/${originalType}.png` : `${IMGPATH}/assets/bg/${type}.png`;
+
   return (
-    <div className="Card" style={{ cursor: clickable ? "pointer" : "default" }} onClick={onCardClick}>
-      <img src={cardImage} alt={`Card_${type}`} className="CardImage" />
-      {!click ? (
+    <div
+      className="Card"
+      onClick={() => {
+        setFlipped(prev => !prev);
+      }}>
+      <img src={cardSrc} alt={`Card_${type}`} className="CardImage" />
+      {!flipped ? (
         <>
-          <h2 className="CardType">{cardType.toUpperCase()}</h2>
+          <h2 className="CardType">{card_type.toUpperCase()}</h2>
           <h1 className="CardWord" style={{ color: fontColor }}>
             {word}
           </h1>

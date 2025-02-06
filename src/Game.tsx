@@ -97,7 +97,7 @@ const Game = () => {
             <div className="indent" />
           </div>
         </div>
-        <div className="CardGrid">{shuffledWords.map((card, index) => (role === "spymaster" ? <Card key={index} word={card.word} type={card.type} id={card.id} /> : <Card key={index} id={card.id} word={card.word} type={card.type} clickable={true} />))}</div>
+        <div className="CardGrid">{shuffledWords.map((card, index) => (role === "spymaster" ? <Card key={index} word={card.word} type={card.type} id={card.id} showColor={true} /> : <Card key={index} id={card.id} word={card.word} type={card.type} showColor={false} />))}</div>
       </div>
     </div>
   );
