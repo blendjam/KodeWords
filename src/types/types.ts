@@ -11,4 +11,8 @@ type WordType = {
   id?: number;
 };
 
-export type { CardProps, WordType };
+type WordListType = {
+  [key: string]: string[];
+};
+
+export type { CardProps, WordType, WordListType };

@@ -1,5 +1,5 @@
-// import "typeface-nunito";
-// import "typeface-league-spartan";
+import "typeface-nunito";
+import "typeface-league-spartan";
 import "./App.css";
 import Home from "./Home";
 

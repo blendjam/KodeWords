@@ -40,20 +40,16 @@ input::-webkit-inner-spin-button {
   justify-content: center;
 }
 
-.InputContainer button {
-  width: 5rem;
+.Dropdown {
+  /* width: 5rem; */
   height: 5rem;
+  padding: 1rem;
   font-size: 1.5rem;
-}
-
-.ButtonContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .Button {
   padding: 1rem 2rem;
+  white-space: nowrap;
   margin: 1rem;
   border: none;
   border-radius: 1rem;

@@ -1,10 +1,10 @@
-import wordList from "./words_list.json";
-import { Link } from "react-router-dom";
+import wordListJSON from "./words_list.json";
+import { Link, parsePath } from "react-router-dom";
 import Card from "./Card";
 import "./Game.css";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { WordType } from "./types/types";
+import { WordListType, WordType } from "./types/types";
 
 function RNG(seed: number) {
   const m_as_number = Math.pow(2, 53) - 111;
@@ -19,10 +19,13 @@ function RNG(seed: number) {
 }
 
 const Game = () => {
-  const { role, roomid } = useParams();
+  const { listname, roomid, role } = useParams();
   const [shuffledWords, setShuffledWords] = useState<Array<WordType>>([]);
   const [turn, setTurn] = useState<"red" | "blue">(RNG(Number(roomid) * 10)() > 0.5 ? "red" : "blue");
   const [isFullScreen, setIsFullScreen] = useState(false);
+
+  const wordList = (wordListJSON as WordListType)[listname ? listname : "classic"];
+  console.log(listname, wordList);
 
   useEffect(() => {
     const randomWordList: Array<string> = [];
@@ -30,11 +33,11 @@ const Game = () => {
 
     // Generate a random list of 25 words
     while (randomWordList.length < 25) {
-      const r1 = Math.floor(RNG(Number(roomid))() * wordList.classic.length);
-      const r2 = Math.floor(RNG(r1 + i)() * wordList.classic.length);
-      const r3 = RNG(r1 + r2)() * wordList.classic.length;
-      const index = Math.floor(r3) % wordList.classic.length;
-      const word = wordList.classic[index];
+      const r1 = Math.floor(RNG(Number(roomid))() * wordList.length);
+      const r2 = Math.floor(RNG(r1 + i)() * wordList.length);
+      const r3 = RNG(r1 + r2)() * wordList.length;
+      const index = Math.floor(r3) % wordList.length;
+      const word = wordList[index];
       if (!randomWordList.includes(word)) {
         randomWordList.push(word);
       }

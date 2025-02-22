@@ -6,7 +6,7 @@ import Game from "./Game";
 
 const router = createHashRouter([
   { path: "/", element: <App /> },
-  { path: "/game/:role/:roomid", element: <Game /> },
+  { path: "/game/:listname/:roomid/:role", element: <Game /> },
 ]);
 
 const rootElement = document.getElementById("root");

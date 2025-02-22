@@ -1,25 +1,26 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import wordList from "./words_list.json";
+import { ChangeEvent, useState } from "react";
 import { useEffect } from "react";
 import "./Home.css";
 
 const Home = () => {
   const [roomid, setRoomid] = useState("");
+  const [selectedList, setSelectedList] = useState("classic");
   const navigate = useNavigate();
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRoomid(event.target.value);
   };
 
-  const onRandomButtonClick = () => {
-    const randomRoomid = Math.floor(100 + Math.random() * 9000).toString();
-    setRoomid(randomRoomid);
+  const onSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedList(e.target.value);
   };
   const onLinkClick = (role: string, event: any) => {
     if (roomid === "") {
       const randomRoomid = Math.floor(100 + Math.random() * 9000).toString();
       setRoomid(randomRoomid);
       event.preventDefault();
-      navigate(`/game/${role}/${randomRoomid}`);
+      navigate(`/game/${selectedList}/${randomRoomid}/${role}`);
     }
   };
   useEffect(() => {
@@ -30,13 +31,19 @@ const Home = () => {
       <h1 className="Title">Home</h1>
       <div className="InputContainer">
         <input placeholder="Enter Room ID" onChange={onInputChange} value={roomid} type="number" />
-        <button className="Button" onClick={onRandomButtonClick}>
-          🎲
-        </button>
+        <select className="Dropdown" name="select" onChange={onSelectChange}>
+          {Object.keys(wordList).map(function (wordListName) {
+            return (
+              <option value={wordListName} selected={selectedList === wordListName}>
+                {wordListName.toUpperCase()}
+              </option>
+            );
+          })}
+        </select>
       </div>
       <div className="ButtonContainer">
         <Link
-          to={`/game/spymaster/${roomid}`}
+          to={`/game/${selectedList}/${roomid}/spymaster`}
           defaultValue={"spymaster"}
           className="Link"
           onClick={(e: any) => {
@@ -44,7 +51,7 @@ const Home = () => {
           }}>
           <button className="Button Spymaster">Join as Spymaster</button>
         </Link>
-        <Link to={`/game/operative/${roomid}`} className="Link" onClick={(e: any) => onLinkClick("operative", e)}>
+        <Link to={`/game${selectedList}/${roomid}/operative`} className="Link" onClick={(e: any) => onLinkClick("operative", e)}>
           <button className="Button Operative">Join as Operatives</button>
         </Link>
       </div>
