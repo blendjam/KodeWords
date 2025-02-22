@@ -4,7 +4,7 @@ import Card from "./Card";
 import "./Game.css";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { WordType } from "types/types";
+import { WordType } from "./types/types";
 
 function RNG(seed: number) {
   const m_as_number = Math.pow(2, 53) - 111;

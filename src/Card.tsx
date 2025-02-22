@@ -1,6 +1,6 @@
 import "./Card.css";
-import { CardProps } from "../types/types";
-import React, { useEffect, useReducer, useState } from "react";
+import { CardProps } from "./types/types";
+import { useState } from "react";
 
 const IMGPATH = "/KodeWords";
 

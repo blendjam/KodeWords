@@ -11,4 +11,4 @@ type WordType = {
   id?: number;
 };
 
-export { CardProps, WordType };
+export type { CardProps, WordType };
