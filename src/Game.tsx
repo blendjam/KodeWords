@@ -1,5 +1,5 @@
 import wordListJSON from "./words_list.json";
-import { Link, parsePath } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Card from "./Card";
 import "./Game.css";
 import { useParams } from "react-router-dom";
@@ -25,7 +25,6 @@ const Game = () => {
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   const wordList = (wordListJSON as WordListType)[listname ? listname : "classic"];
-  console.log(listname, wordList);
 
   useEffect(() => {
     const randomWordList: Array<string> = [];

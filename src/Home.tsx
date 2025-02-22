@@ -13,6 +13,7 @@ const Home = () => {
   };
 
   const onSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    console.log("Changed", e.target.value);
     setSelectedList(e.target.value);
   };
   const onLinkClick = (role: string, event: any) => {
@@ -32,9 +33,9 @@ const Home = () => {
       <div className="InputContainer">
         <input placeholder="Enter Room ID" onChange={onInputChange} value={roomid} type="number" />
         <select className="Dropdown" name="select" onChange={onSelectChange}>
-          {Object.keys(wordList).map(function (wordListName) {
+          {Object.keys(wordList).map(function (wordListName, i) {
             return (
-              <option value={wordListName} selected={selectedList === wordListName}>
+              <option key={i} value={wordListName} defaultValue={selectedList}>
                 {wordListName.toUpperCase()}
               </option>
             );
