@@ -21,10 +21,14 @@ function RNG(seed: number) {
 const Game = () => {
   const { listname, roomid, role } = useParams();
   const [shuffledWords, setShuffledWords] = useState<Array<WordType>>([]);
-  const [turn, setTurn] = useState<"red" | "blue">(RNG(Number(roomid) * 10)() > 0.5 ? "red" : "blue");
+  const [turn, setTurn] = useState<"red" | "blue">(
+    RNG(Number(roomid) * 10)() > 0.5 ? "red" : "blue"
+  );
   const [isFullScreen, setIsFullScreen] = useState(false);
 
-  const wordList = (wordListJSON as WordListType)[listname ? listname : "classic"];
+  const wordList = (wordListJSON as WordListType)[
+    listname ? listname : "classic"
+  ];
 
   useEffect(() => {
     const randomWordList: Array<string> = [];
@@ -52,23 +56,34 @@ const Game = () => {
     const blueWords = randomWordList.splice(0, blueAmount);
     const blackWord = randomWordList[0];
 
-    const tempWords = [...redWords.map((word, i) => ({ word, type: "red", id: i })), ...blueWords.map((word, i) => ({ word, type: "blue", id: i })), { word: blackWord, type: "black" }, ...grayWords.map((word, i) => ({ word, type: "gray", id: i }))];
+    const tempWords = [
+      ...redWords.map((word, i) => ({ word, type: "red", id: i })),
+      ...blueWords.map((word, i) => ({ word, type: "blue", id: i })),
+      { word: blackWord, type: "black" },
+      ...grayWords.map((word, i) => ({ word, type: "gray", id: i })),
+    ];
 
     setTurn(RNG(Number(roomid) * 10)() > 0.5 ? "red" : "blue");
 
     const temp_list = tempWords;
+    const rng = RNG(Number(roomid));
     for (let i = 0; i < temp_list.length; i++) {
-      const randomNumber = RNG(Math.floor(RNG(Number(roomid) + i)() * 23456789))() * 987654321;
+      const randomNumber = rng() * 987654321;
       const j = Math.floor(randomNumber) % temp_list.length;
       const temp = temp_list[i];
       temp_list[i] = temp_list[j];
       temp_list[j] = temp;
     }
     setShuffledWords(temp_list);
-  }, []);
+  }, [listname, roomid, wordList, turn]);
 
   useEffect(() => {
-    document.documentElement.style.setProperty("--base", `radial-gradient(circle, ${turn == "red" ? "#e48957" : "#8fc0ef"}, ${turn == "red" ? "#461408" : "#113154"})`);
+    document.documentElement.style.setProperty(
+      "--base",
+      `radial-gradient(circle, ${turn == "red" ? "#e48957" : "#8fc0ef"}, ${
+        turn == "red" ? "#461408" : "#113154"
+      })`
+    );
   }, [turn]);
 
   return (
@@ -89,22 +104,49 @@ const Game = () => {
               onClick={() => {
                 const isMobile = window.innerWidth < 868;
                 setIsFullScreen(!isFullScreen);
-                isFullScreen ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+                if (isFullScreen) {
+                  document.exitFullscreen();
+                } else {
+                  document.documentElement.requestFullscreen();
+                }
 
                 if (isMobile) {
-                  isFullScreen
-                    ? window.screen.orientation.unlock()
-                    : // @ts-ignored
-                      window.screen.orientation.lock("landscape-primary");
+                  if (isFullScreen) {
+                    window.screen.orientation.unlock();
+                  } else {
+                    // @ts-expect-error - lock is not available on all browsers
+                    window.screen.orientation.lock("landscape-primary");
+                  }
                 }
               }}
-              className="fullscreen">
+              className="fullscreen"
+            >
               <img src="/KodeWords/assets/icon/fullscreen.png" />
             </button>
           </div>
         </nav>
         <div className="GameContainer">
-          <div className="CardGrid">{shuffledWords.map((card, index) => (role === "spymaster" ? <Card key={index} word={card.word} type={card.type} id={card.id} showColor={true} /> : <Card key={index} id={card.id} word={card.word} type={card.type} showColor={false} />))}</div>
+          <div className="CardGrid">
+            {shuffledWords.map((card, index) =>
+              role === "spymaster" ? (
+                <Card
+                  key={index}
+                  word={card.word}
+                  type={card.type}
+                  id={card.id}
+                  showColor={true}
+                />
+              ) : (
+                <Card
+                  key={index}
+                  id={card.id}
+                  word={card.word}
+                  type={card.type}
+                  showColor={false}
+                />
+              )
+            )}
+          </div>
         </div>
       </div>
     </>

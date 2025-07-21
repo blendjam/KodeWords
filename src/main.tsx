@@ -3,10 +3,17 @@ import "./main.css";
 import App from "./App";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 import Game from "./Game";
+import AssetLoader from "./AssetLoader";
 
 const router = createHashRouter([
-  { path: "/", element: <App /> },
-  { path: "/game/:listname/:roomid/:role", element: <Game /> },
+  {
+    path: "/",
+    element: <AssetLoader />,
+    children: [
+      { path: "/", element: <App /> },
+      { path: "/game/:listname/:roomid/:role", element: <Game /> },
+    ],
+  },
 ]);
 
 const rootElement = document.getElementById("root");
