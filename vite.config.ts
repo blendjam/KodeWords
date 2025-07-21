@@ -14,6 +14,9 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
+      workbox: {
+        globPatterns: ["**/*.{js,css,html,ico,png,svg,json,ttf,woff,woff2}"],
+      },
       includeAssets: [
         "favicon.ico",
         "robots.txt",
