@@ -7,7 +7,10 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "paths": {
-      "*": ["./node_modules/"]
+      "*": ["./node_modules/"],
+      "@kodewords/shared/*": ["../shared/*"],
+      "@kodewords/server/*": ["../server/*"],
+      "@kodewords/frontend/*": ["./*"]
     },
 
     "resolveJsonModule": true,

@@ -4,6 +4,7 @@ import App from "./App";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 import Game from "./Game";
 import AssetLoader from "./AssetLoader";
+import { WsProvider } from "./hooks/wsProvider";
 
 const router = createHashRouter([
   {
@@ -11,15 +12,25 @@ const router = createHashRouter([
     element: <AssetLoader />,
     children: [
       { path: "/", element: <App /> },
-      { path: "/game/:listname/:roomid/:role", element: <Game /> },
+      { path: "/game", element: <Game /> },
     ],
   },
 ]);
 
+if (import.meta.env.DEV && "serviceWorker" in navigator) {
+  navigator.serviceWorker.getRegistrations().then(registrations => {
+    registrations.forEach(registration => registration.unregister());
+  });
+}
+
 const rootElement = document.getElementById("root");
 if (rootElement) {
   const root = ReactDOM.createRoot(rootElement);
-  root.render(<RouterProvider router={router}></RouterProvider>);
+  root.render(
+    <WsProvider>
+      <RouterProvider router={router}></RouterProvider>
+    </WsProvider>,
+  );
 } else {
   console.error("Root element not found");
 }
