@@ -1,10 +1,11 @@
 import ReactDOM from "react-dom/client";
 import "./main.css";
-import App from "./App";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 import Game from "./Game";
 import AssetLoader from "./AssetLoader";
 import { WsProvider } from "./hooks/wsProvider";
+import Home from "./Home";
+import App from "./App";
 
 const router = createHashRouter([
   {
@@ -12,6 +13,7 @@ const router = createHashRouter([
     element: <AssetLoader />,
     children: [
       { path: "/", element: <App /> },
+      { path: "/home", element: <Home /> },
       { path: "/game", element: <Game /> },
     ],
   },
@@ -27,8 +29,8 @@ const rootElement = document.getElementById("root");
 if (rootElement) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
-    <WsProvider>
-      <RouterProvider router={router}></RouterProvider>
+    <WsProvider onStart={() => {}}>
+      <RouterProvider router={router} />
     </WsProvider>,
   );
 } else {

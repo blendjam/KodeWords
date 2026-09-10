@@ -1,10 +1,41 @@
+@import "tailwindcss";
+
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  font-family: "League Spartan", "Nunito", sans-serif;
 }
 
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@theme {
+  --font-base: "League Spartan", "Nunito", sans-serif;
+}
+
+.dotted-bg {
+  background: var(--base);
+  --dot-bg: #232323;
+  --dot-color: #121212;
+  --dot-size: 3px;
+  --dot-space: 30px;
+  background:
+    linear-gradient(90deg, var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center /
+      var(--dot-space) var(--dot-space),
+    linear-gradient(var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space)
+      var(--dot-space),
+    var(--dot-color);
+}
+
+.bg-dots {
+  --dot-bg: black;
+  --dot-color: white;
+  --dot-size: 2px;
+  --dot-space: 15px;
+  background:
+    linear-gradient(90deg, var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center /
+      var(--dot-space) var(--dot-space),
+    linear-gradient(var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space)
+      var(--dot-space),
+    var(--dot-color);
 }
