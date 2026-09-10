@@ -1,19 +1,19 @@
 import { ClientMessage } from "@kodewords/shared/messages";
-import { Room } from "@kodewords/shared/types";
 import { createContext, useContext } from "react";
 
 type WsContextProps = {
-  ws: WebSocket | null;
+  ws: WebSocket;
   send: (message: ClientMessage) => void;
-  room: Room | null;
 };
 
-export const WsContext = createContext<WsContextProps>({
-  ws: null,
-  send: () => {},
-  room: null,
-});
+export const WsContext = createContext<WsContextProps | null>(null);
 
-export function useWs() {
-  return useContext(WsContext);
+export function useWs(): WsContextProps {
+  const context = useContext(WsContext);
+
+  if (!context) {
+    throw new Error("useWs must be used within a WsProvider");
+  }
+
+  return context;
 }

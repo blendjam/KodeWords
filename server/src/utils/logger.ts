@@ -2,12 +2,10 @@ type LogLevel = "info" | "warn" | "error";
 
 function log(level: LogLevel, message: string, meta?: Record<string, unknown>) {
   const entry = {
-    timestamp: new Date().toISOString(),
-    level,
-    message,
     ...meta,
+    timestamp: new Date().toISOString(),
   };
-  console.log(JSON.stringify(entry));
+  console.log(`${level}: ${message} -> ${JSON.stringify(entry, null, 2)}`);
 }
 
 export const logger = {

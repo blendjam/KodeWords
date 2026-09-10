@@ -1,13 +1,16 @@
+export type Color = "red" | "blue" | "gray" | "black";
+export type CardType = "neutral" | "assassin" | "red" | "blue";
+
 type CardProps = {
   word: string;
-  type: string;
+  type: Color;
   showColor?: boolean;
-  id?: number;
+  id: number;
 };
 
 type WordType = {
   word: string;
-  type: string;
+  type: CardType;
   id?: number;
 };
 
