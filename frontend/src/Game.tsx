@@ -1,8 +1,7 @@
 import wordListJSON from "./words_list.json";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import Card from "./Card";
 import "./Game.css";
-import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { WordListType, WordType } from "./types/types";
 
@@ -19,16 +18,17 @@ function RNG(seed: number) {
 }
 
 const Game = () => {
-  const { listname, roomid, role } = useParams();
+  const [searchParams] = useSearchParams();
+  const listType = searchParams.get("list");
+  const roomId = searchParams.get("id");
+  const role = searchParams.get("role");
   const [shuffledWords, setShuffledWords] = useState<Array<WordType>>([]);
   const [turn, setTurn] = useState<"red" | "blue">(
-    RNG(Number(roomid) * 10)() > 0.5 ? "red" : "blue"
+    RNG(Number(roomId) * 10)() > 0.5 ? "red" : "blue",
   );
   const [isFullScreen, setIsFullScreen] = useState(false);
 
-  const wordList = (wordListJSON as WordListType)[
-    listname ? listname : "classic"
-  ];
+  const wordList = (wordListJSON as WordListType)[listType ? listType : "classic"];
 
   useEffect(() => {
     const randomWordList: Array<string> = [];
@@ -36,7 +36,7 @@ const Game = () => {
 
     // Generate a random list of 25 words
     while (randomWordList.length < 25) {
-      const r1 = Math.floor(RNG(Number(roomid))() * wordList.length);
+      const r1 = Math.floor(RNG(Number(roomId))() * wordList.length);
       const r2 = Math.floor(RNG(r1 + i)() * wordList.length);
       const r3 = RNG(r1 + r2)() * wordList.length;
       const index = Math.floor(r3) % wordList.length;
@@ -63,10 +63,10 @@ const Game = () => {
       ...grayWords.map((word, i) => ({ word, type: "gray", id: i })),
     ];
 
-    setTurn(RNG(Number(roomid) * 10)() > 0.5 ? "red" : "blue");
+    setTurn(RNG(Number(roomId) * 10)() > 0.5 ? "red" : "blue");
 
     const temp_list = tempWords;
-    const rng = RNG(Number(roomid));
+    const rng = RNG(Number(roomId));
     for (let i = 0; i < temp_list.length; i++) {
       const randomNumber = rng() * 987654321;
       const j = Math.floor(randomNumber) % temp_list.length;
@@ -75,14 +75,14 @@ const Game = () => {
       temp_list[j] = temp;
     }
     setShuffledWords(temp_list);
-  }, [listname, roomid, wordList, turn]);
+  }, [listType, roomId, wordList, turn]);
 
   useEffect(() => {
     document.documentElement.style.setProperty(
       "--base",
       `radial-gradient(circle, ${turn == "red" ? "#e48957" : "#8fc0ef"}, ${
         turn == "red" ? "#461408" : "#113154"
-      })`
+      })`,
     );
   }, [turn]);
 
@@ -99,7 +99,7 @@ const Game = () => {
           </div>
           <h1 className="Role">{role?.toUpperCase()}</h1>
           <div style={{ display: "flex" }}>
-            <h3 className="Roomid">ID: {roomid}</h3>
+            <h3 className="roomId">ID: {roomId}</h3>
             <button
               onClick={() => {
                 const isMobile = window.innerWidth < 868;
@@ -114,13 +114,11 @@ const Game = () => {
                   if (isFullScreen) {
                     window.screen.orientation.unlock();
                   } else {
-                    // @ts-expect-error - lock is not available on all browsers
                     window.screen.orientation.lock("landscape-primary");
                   }
                 }
               }}
-              className="fullscreen"
-            >
+              className="fullscreen">
               <img src="/KodeWords/assets/icon/fullscreen.png" />
             </button>
           </div>
@@ -129,13 +127,7 @@ const Game = () => {
           <div className="CardGrid">
             {shuffledWords.map((card, index) =>
               role === "spymaster" ? (
-                <Card
-                  key={index}
-                  word={card.word}
-                  type={card.type}
-                  id={card.id}
-                  showColor={true}
-                />
+                <Card key={index} word={card.word} type={card.type} id={card.id} showColor={true} />
               ) : (
                 <Card
                   key={index}
@@ -144,7 +136,7 @@ const Game = () => {
                   type={card.type}
                   showColor={false}
                 />
-              )
+              ),
             )}
           </div>
         </div>
