@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "web": "npm run web --workspace=frontend",
-    "server": "tsx watch server/index.ts",
+    "server": "tsx watch --tsconfig server/tsconfig.json server/index.ts",
     "start": "tsx",
     "install:all": "npm install --workspace=frontend && npm install --workspace=server"
   },

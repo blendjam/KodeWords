@@ -1,51 +1,66 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { WsContext } from "./wsContext";
 import { WS_SERVER_ADDRESS } from "../utils/constants";
-import type { ClientMessage, ServerMessage } from "@kodewords/shared/messages";
-import { SerializedRoom } from "@kodewords/shared/types";
+import type { ClientMessagePayload, ServerMessage } from "@kodewords/shared/messages";
+import { ConnectionStatus, SerializedRoom } from "@kodewords/shared/types";
 import { deserializeRoom } from "@kodewords/shared/room";
 import { useRoomState } from "../state/roomState";
+import { getUserId } from "../utils/login";
 
-const ConnectionStatus = {
-  CONNECTED: "CONNECTED",
-  DISCONNECTED: "DISCONNECTED",
-  CONNECTING: "CONNECTING",
-};
 export type ConnectionStatus = (typeof ConnectionStatus)[keyof typeof ConnectionStatus];
 
 export function WsProvider({ children, onStart }: { children: React.ReactNode; onStart: () => void }) {
   const ws = useRef<WebSocket | null>(null);
   const { setRoom } = useRoomState();
+  const userId = useMemo(() => getUserId(), []);
   // const counterRef = useRef<number>(0);
   const [connectionStatus, setConnectionStatus] = useState(ConnectionStatus.DISCONNECTED);
 
-  const handleOnMessage = (data: ServerMessage) => {
-    if (!data.type) return;
+  const handleOnMessage = useCallback(
+    (data: ServerMessage) => {
+      if (!data.type) return;
 
-    switch (data.type) {
-      case "room_state": {
-        const room = deserializeRoom(data.payload as SerializedRoom);
-        setRoom(room);
-        break;
+      switch (data.type) {
+        case "room_state": {
+          const room = deserializeRoom(data.payload as SerializedRoom);
+          console.log("Room State: ", room);
+          setRoom(room);
+          break;
+        }
+        default: {
+          console.log("hello");
+        }
       }
-      default: {
-        console.log("hello");
+    },
+    [setRoom],
+  );
+
+  const send = useCallback(
+    (message: ClientMessagePayload) => {
+      if (ws.current && ws.current?.readyState === WebSocket.OPEN) {
+        ws.current?.send(
+          JSON.stringify({
+            ...message,
+            userId,
+          }),
+        );
       }
-    }
-  };
+    },
+    [userId],
+  );
 
   const connect = useCallback(() => {
     if (ws.current) {
       console.log("Socket already exists: ", ws.current);
       return;
     }
-    console.log("Connecting to websocket");
     try {
       setConnectionStatus(ConnectionStatus.CONNECTING);
       const socket = new WebSocket(WS_SERVER_ADDRESS);
       if (!socket) return;
       socket.onopen = () => {
         setConnectionStatus(ConnectionStatus.CONNECTED);
+        send({ type: "login" });
         console.log("WS: Connected");
         onStart();
         // counterRef.current += 1;
@@ -72,13 +87,7 @@ export function WsProvider({ children, onStart }: { children: React.ReactNode; o
       ws.current = null;
       setConnectionStatus(ConnectionStatus.DISCONNECTED);
     }
-  }, []);
-
-  const send = (message: ClientMessage) => {
-    if (ws.current && ws.current?.readyState === WebSocket.OPEN) {
-      ws.current?.send(JSON.stringify(message));
-    }
-  };
+  }, [handleOnMessage, onStart, send]);
   useEffect(() => {
     if (connectionStatus == ConnectionStatus.DISCONNECTED) {
       connect();
@@ -95,7 +104,8 @@ export function WsProvider({ children, onStart }: { children: React.ReactNode; o
     <WsContext.Provider
       value={{
         ws: ws.current!,
-        send: send,
+        send,
+        connectionStatus,
       }}>
       {children}
     </WsContext.Provider>
