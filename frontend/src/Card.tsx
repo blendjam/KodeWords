@@ -62,9 +62,10 @@ const Card = ({ word, type, showColor, id }: CardProps) => {
   const hasAgent = agent.count > 0;
   const frameIndex = hasAgent ? id % agent.count : 0;
 
-  const fontColor = showColor && type === "black" ? "white" : "black";
-  const originalType = showColor ? type : "gray";
-  const cardLabel = showColor ? CardNames[type].toUpperCase() : CardNames.gray.toUpperCase();
+  const showBgColor = isRevealed ? true : showColor;
+  const fontColor = showBgColor && type === "black" ? "white" : "black";
+  const originalType = showBgColor ? type : "gray";
+  const cardLabel = showBgColor ? CardNames[type].toUpperCase() : CardNames.gray.toUpperCase();
 
   // Dynamically fit the word to the card.
   useEffect(() => {
