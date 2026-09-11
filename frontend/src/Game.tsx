@@ -102,16 +102,22 @@ function Game() {
   };
 
   return (
-    <main className=" relative flex h-screen w-screen flex-col items-center overflow-auto bg-[radial-gradient(circle,#e48957,#461408)] ">
-      <div className=" bg-dots pointer-events-none absolute inset-0 opacity-20 mix-blend-multiply " />
+    <main
+      className={`relative flex h-screen w-screen flex-col items-center  overflow-auto 
+        ${
+          turn === "red"
+            ? "bg-[radial-gradient(circle,#e48957,#461408)]"
+            : "bg-[radial-gradient(circle,#58c7e3,#082b4a)]"
+        }`}>
+      <div className="bg-dots pointer-events-none absolute inset-0 opacity-20 mix-blend-multiply" />
 
-      <nav className="z-10 flex w-full items-center justify-between px-4 py-2">
+      <nav className="z-10 flex w-full items-center justify-between px-2 mt-2">
         <div className="flex items-center gap-4">
-          <button onClick={handleBack} className=" rounded-lg bg-white px-4 py-1 font-bold text-[#222]">
+          <button onClick={handleBack} className=" rounded-lg bg-white px-2 py-1 font-bold text-[#222] text-[10px]">
             HOME
           </button>
           <h4
-            className={` rounded-md px-2 py-1 font-bold text-white
+            className={` rounded-md px-2 py-1 text-[10px] font-bold text-white
             ${
               turn === "red"
                 ? "bg-linear-to-br from-[#d25028] to-[#ed8745]"
@@ -120,23 +126,20 @@ function Game() {
           `}>
             {turn.toUpperCase()}
           </h4>
-          <span className="text-white">Plays First</span>
+          <span className="text-white text-[10px]">Plays First</span>
         </div>
 
-        <div className="flex items-center justify-center top-4 left-[50%] translate-x-[-50%] absolute">
-          <h1 className="font-bold text-white">{role?.toUpperCase()}</h1>
-        </div>
         <div className="flex items-center gap-4">
-          <span className="rounded bg-black/25 px-4 py-1 text-white text-[clamp(0.7rem, 1.5vw, 1rem)]">
-            ID: {roomId}
-          </span>
+          <span className="rounded bg-black/25 px-4 py-1 text-white text-[10px]">ID: {roomId}</span>
 
           <div
-            className={`rounded-full size-2 ${connectionStatus === ConnectionStatus.CONNECTED ? "bg-green-400" : "bg-red-500"}`}></div>
+            className={`rounded-full size-1.5 ${connectionStatus === ConnectionStatus.CONNECTED ? "bg-green-400" : "bg-red-500"}`}></div>
           <FullScreenButton />
         </div>
       </nav>
-      <Board words={shuffledWords} role={role as Role} />
+      <div className="w-full h-full flex items-center justify-center">
+        <Board words={shuffledWords} role={role as Role} />
+      </div>
     </main>
   );
 }

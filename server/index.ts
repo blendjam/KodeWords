@@ -1,10 +1,12 @@
+import { createServer } from "http";
 import { config } from "./src/config";
 import { logger } from "./src/utils/logger";
 import { createWsServer } from "./src/ws/server";
 
 console.log("Server Started");
 
-const wss = createWsServer(config.port);
+const server = createServer();
+const wss = createWsServer(server);
 
 function shutdown(signal: string) {
   logger.info(`Received ${signal}, shutting down gracefully`);
@@ -32,3 +34,6 @@ process.on("uncaughtException", err => {
 process.on("unhandledRejection", reason => {
   logger.error("Unhandled rejection", { reason: String(reason) });
 });
+
+server.listen(config.port);
+console.log(`Listening on port ${config.port}`);

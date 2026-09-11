@@ -4,8 +4,8 @@ import Card from "../Card";
 
 function Board({ words, role }: { words: { word: string; id: number; type: string }[]; role: Role }) {
   return (
-    <div className="relative mx-auto my-auto aspect-8/5 w-[min(95vw,calc(85dvh*1.6))] rounded-2xl bg-[#222] p-3">
-      <div className=" grid h-full w-full grid-cols-5 grid-rows-5 gap-2">
+    <div className="aspect-8/5 w-[min(95vw,calc(85dvh*1.6))] rounded bg-[#222] p-[1vw]">
+      <div className="grid h-full w-full grid-cols-5 grid-rows-5 gap-[max(4px,min(1vw,1vh))]">
         {words.map((card, index) => (
           <Card key={index} id={card.id} word={card.word} type={card.type as Color} showColor={role === "spymaster"} />
         ))}
