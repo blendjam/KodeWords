@@ -1,5 +1,9 @@
 import { useState } from "react";
 
+type LockableScreenOrientation = ScreenOrientation & {
+  lock: (orientation: OrientationType) => Promise<void>;
+};
+
 export function FullScreenButton({ className }: { className?: string }) {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const onButtonClick = () => {
@@ -14,8 +18,11 @@ export function FullScreenButton({ className }: { className?: string }) {
     if (isMobile) {
       if (isFullScreen) {
         window.screen.orientation.unlock();
-      } else {
-        window.screen.orientation.lock("landscape-primary");
+      } else if ("lock" in window.screen.orientation) {
+        const orientation = window.screen.orientation as LockableScreenOrientation;
+        void orientation.lock("landscape-primary").catch(() => {
+          // Orientation locking is not supported in every fullscreen context.
+        });
       }
     }
   };
