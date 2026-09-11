@@ -2,9 +2,10 @@ import { WebSocketServer } from "ws";
 import { logger } from "../utils/logger";
 import { handleMessage } from "./message-handler";
 import type { ClientMessage } from "@kodewords/shared/messages";
+import type { Server as HttpServer } from "http";
 
-export function createWsServer(port: number) {
-  const wss = new WebSocketServer({ port });
+export function createWsServer(server: HttpServer) {
+  const wss = new WebSocketServer({ server });
 
   wss.on("connection", socket => {
     logger.info("Client Connected");
@@ -35,6 +36,5 @@ export function createWsServer(port: number) {
   wss.on("error", err => {
     logger.error("WebsocketServer: Error", { error: String(err) });
   });
-  console.log(`Listening to port ${port}`);
   return wss;
 }
