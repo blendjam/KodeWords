@@ -32,7 +32,6 @@ function handleSelectWord(socket: WebSocket, message: Extract<ClientMessage, { t
   const player = connections.getPlayerFromSocket(socket);
   if (!player) return logger.error("Player not found for socket");
   console.log("Player role: ", player);
-  if (player.role === "operative") return logger.warn("Operative cannot select word", { userId: player.id });
   const room = roomManager.getRoomByPlayerId(player.id);
   if (!room) return logger.error("Room not found for player", { playerId: player.id });
   roomManager.selectWord(room.id, player.id, message.word);
