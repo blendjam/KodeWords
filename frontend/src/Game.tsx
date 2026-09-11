@@ -1,11 +1,13 @@
 import wordListJSON from "./words_list.json";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import Card from "./Card";
-import { useMemo, useState } from "react";
-import { Color, WordListType } from "./types/types";
+import { useEffect, useMemo } from "react";
+import { WordListType } from "./types/types";
 import { useRoomState } from "./state/roomState";
 import { FullScreenButton } from "./components/fullScreenButton";
-import { ListType } from "@kodewords/shared/types";
+import { ConnectionStatus, ListType, Role } from "@kodewords/shared/types";
+import { useWs } from "./hooks/wsContext";
+import Board from "./components/board";
+import { getRandomRoomId } from "@kodewords/shared/room";
 
 function RNG(seed: number) {
   const m_as_number = Math.pow(2, 53) - 111;
@@ -67,47 +69,41 @@ function generateBoard(roomId: number, listType: ListType, turn: Turn) {
   return temp_list;
 }
 
-const Game = () => {
+function Game() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const clearRoom = useRoomState(state => state.clearRoom);
-  const listType = searchParams.get("list");
-  const roomId = searchParams.get("id");
-  const role = searchParams.get("role");
-  const [turn] = useState<Turn>(RNG(Number(roomId) * 10)() > 0.5 ? "red" : "blue");
+  const room = useRoomState(state => state.room);
+  const roomId = (searchParams.get("id") as string) || getRandomRoomId();
+  const role = (searchParams.get("role") as Role) || "operative";
+  const listType = (searchParams.get("list") as ListType) || "classic";
+  const { connectionStatus, send } = useWs();
 
-  const shuffledWords = useMemo(
-    () => generateBoard(Number(roomId), listType as ListType, turn),
-    [listType, roomId, turn],
-  );
+  useEffect(() => {
+    if (connectionStatus !== ConnectionStatus.CONNECTED || !roomId || !role || !listType) return;
+    send({ type: "join_room", roomId, role, listType });
+  }, [connectionStatus, listType, role, roomId, send]);
+
+  const turn = useMemo(() => {
+    const seed = room?.roomId ? Number(roomId) : 0;
+    return RNG(seed * 10)() > 0.5 ? "red" : "blue";
+  }, [room, roomId]);
+
+  const shuffledWords = useMemo(() => {
+    const boardRoomId = room?.roomId ?? roomId;
+    const boardListType = room?.listType ?? listType;
+    return generateBoard(Number(boardRoomId), boardListType, turn);
+  }, [listType, room, roomId, turn]);
 
   const handleBack = () => {
+    send({ type: "leave_room", roomId });
     clearRoom();
     navigate("/");
   };
 
   return (
-    <main
-      className="
-      relative
-      flex
-      h-screen
-      w-screen
-      flex-col
-      items-center
-      overflow-auto
-      bg-[radial-gradient(circle,#e48957,#461408)]
-    ">
-      <div
-        className="
-        bg-dots
-        pointer-events-none
-        absolute
-        inset-0
-        opacity-20
-        mix-blend-multiply
-      "
-      />
+    <main className=" relative flex h-screen w-screen flex-col items-center overflow-auto bg-[radial-gradient(circle,#e48957,#461408)] ">
+      <div className=" bg-dots pointer-events-none absolute inset-0 opacity-20 mix-blend-multiply " />
 
       <nav className="z-10 flex w-full items-center justify-between px-4 py-2">
         <div className="flex items-center gap-4">
@@ -127,8 +123,10 @@ const Game = () => {
           </h4>
         </div>
 
-        <h1 className="font-bold text-white">{role?.toUpperCase()}</h1>
-
+        <div className="flex items-center justify-center">
+          <h1 className="font-bold text-white">{role?.toUpperCase()}</h1>
+          <div className=""></div>
+        </div>
         <div className="flex items-center gap-4">
           <span className="rounded bg-black/25 px-4 py-1 text-white text-[clamp(0.7rem, 1.5vw, 1rem)]">
             ID: {roomId}
@@ -137,22 +135,9 @@ const Game = () => {
           <FullScreenButton />
         </div>
       </nav>
-
-      <div className="relative mx-auto my-auto aspect-8/5 w-[min(95vw,calc(85dvh*1.6))] rounded-2xl bg-[#222] p-3">
-        <div className=" grid h-full w-full grid-cols-5 grid-rows-5 gap-2">
-          {shuffledWords.map((card, index) => (
-            <Card
-              key={index}
-              id={card.id}
-              word={card.word}
-              type={card.type as Color}
-              showColor={role === "spymaster"}
-            />
-          ))}
-        </div>
-      </div>
+      <Board words={shuffledWords} role={role as Role} />
     </main>
   );
-};
+}
 
 export default Game;

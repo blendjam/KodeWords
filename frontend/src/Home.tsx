@@ -1,16 +1,12 @@
 import wordList from "./words_list.json";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useWs } from "./hooks/wsContext";
 import type { ListType, Role } from "@kodewords/shared/types";
-import { useRoomState } from "./state/roomState";
 import { FullScreenButton } from "./components/fullScreenButton";
+import { getRandomRoomId } from "@kodewords/shared/room";
 
 function Home() {
   const navigate = useNavigate();
-  const userId = "sanket123";
-  const room = useRoomState(state => state.room);
-  const { send } = useWs();
 
   const [roomId, setRoomId] = useState("");
   const [selectedList, setSelectedList] = useState<ListType>("classic");
@@ -25,32 +21,17 @@ function Home() {
 
   const onJoinButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const role = event.currentTarget.value as Role;
-
-    send({
-      type: "join_room",
-      roomId,
-      role,
-      listType: selectedList,
-      userId,
-    });
-  };
-
-  useEffect(() => {
-    if (!room) return;
-
-    const player = room.players.get(userId);
-    if (!player) return;
+    const id = roomId === "" ? getRandomRoomId() : roomId;
 
     const params = new URLSearchParams({
-      id: room.roomId,
-      list: room.listType,
-      role: player.role,
+      id,
+      list: selectedList,
+      role,
     });
-
     navigate(`/game?${params.toString()}`, {
       replace: true,
     });
-  }, [room, navigate]);
+  };
 
   useEffect(() => {
     document.documentElement.style.setProperty("--base", "radial-gradient(circle,#383838 0%, #2f2f2f 100%)");

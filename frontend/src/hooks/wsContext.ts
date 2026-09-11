@@ -1,9 +1,11 @@
-import { ClientMessage } from "@kodewords/shared/messages";
+import { ClientMessagePayload } from "@kodewords/shared/messages";
 import { createContext, useContext } from "react";
+import { ConnectionStatus } from "./wsProvider";
 
 type WsContextProps = {
   ws: WebSocket;
-  send: (message: ClientMessage) => void;
+  send: (message: ClientMessagePayload) => void;
+  connectionStatus: ConnectionStatus;
 };
 
 export const WsContext = createContext<WsContextProps | null>(null);
