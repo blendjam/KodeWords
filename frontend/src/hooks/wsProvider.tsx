@@ -54,63 +54,68 @@ export function WsProvider({ children, onStart }: { children: React.ReactNode; o
     [userId],
   );
 
-  const connect = useCallback(() => {
-    if (ws.current && (ws.current.readyState === WebSocket.OPEN || ws.current.readyState === WebSocket.CONNECTING)) {
-      console.log("Socket already exists: ", ws.current);
-      return;
-    }
+  const connect = useCallback(
+    (isInitial = false) => {
+      if (ws.current && (ws.current.readyState === WebSocket.OPEN || ws.current.readyState === WebSocket.CONNECTING)) {
+        console.log("Socket already exists: ", ws.current);
+        return;
+      }
 
-    if (retryTimeout.current) {
-      clearTimeout(retryTimeout.current);
-      retryTimeout.current = null;
-    }
-    try {
-      console.log("WS: Connecting...");
-      setConnectionStatus(ConnectionStatus.CONNECTING);
-      const socket = new WebSocket(WS_SERVER_ADDRESS);
+      if (retryTimeout.current) {
+        clearTimeout(retryTimeout.current);
+        retryTimeout.current = null;
+      }
+      try {
+        console.log("WS: Connecting...");
+        setConnectionStatus(ConnectionStatus.CONNECTING);
+        const socket = new WebSocket(WS_SERVER_ADDRESS);
 
-      socket.onopen = () => {
-        console.log("WS: Connected");
-        setConnectionStatus(ConnectionStatus.CONNECTED);
-        send({ type: "login" });
-        onStart();
-      };
+        socket.onopen = () => {
+          console.log("WS: Connected");
+          setConnectionStatus(ConnectionStatus.CONNECTED);
+          retryDelay.current = INITIAL_RETRY_DELAY;
+          send({ type: "login" });
+          onStart();
+        };
 
-      socket.onmessage = event => {
-        const data = JSON.parse(event.data) as ServerMessage;
-        handleOnMessage(data);
-      };
+        socket.onmessage = event => {
+          const data = JSON.parse(event.data) as ServerMessage;
+          handleOnMessage(data);
+        };
 
-      socket.onerror = err => {
-        console.log("WS: Error", err);
-      };
+        socket.onerror = err => {
+          console.log("WS: Error", err);
+        };
 
-      socket.onclose = () => {
-        console.log("WS: disconnected");
-        if (ws.current === socket) {
-          ws.current = null;
-        }
+        socket.onclose = () => {
+          console.log("WS: disconnected");
+          if (ws.current === socket) {
+            ws.current = null;
+          }
+          setConnectionStatus(ConnectionStatus.DISCONNECTED);
+          const delay = isInitial ? 0 : retryDelay.current;
+
+          console.log(`WS: Retrying in ${delay}ms...`);
+
+          retryTimeout.current = setTimeout(() => {
+            retryTimeout.current = null;
+            connect(false);
+
+            // Exponential backoff
+            retryDelay.current = Math.min(retryDelay.current * 2, MAX_RETRY_DELAY);
+          }, delay);
+        };
+        ws.current = socket;
+      } catch (err) {
+        console.log("WS: Failed during connection", String(err));
+        ws.current = null;
         setConnectionStatus(ConnectionStatus.DISCONNECTED);
-        const delay = retryDelay.current;
-
-        console.log(`WS: Retrying in ${delay}ms...`);
-        retryTimeout.current = setTimeout(() => {
-          retryTimeout.current = null;
-          connect();
-
-          // Exponential backoff
-          retryDelay.current = Math.min(retryDelay.current * 2, MAX_RETRY_DELAY);
-        }, delay);
-      };
-      ws.current = socket;
-    } catch (err) {
-      console.log("WS: Failed during connection", String(err));
-      ws.current = null;
-      setConnectionStatus(ConnectionStatus.DISCONNECTED);
-    }
-  }, [handleOnMessage, onStart, send]);
+      }
+    },
+    [handleOnMessage, onStart, send],
+  );
   useEffect(() => {
-    connect();
+    connect(true);
 
     return () => {
       // Cancel Retry
