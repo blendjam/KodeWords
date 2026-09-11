@@ -31,14 +31,14 @@ export default defineConfig({
       },
       includeAssets: ["favicon.ico", "robots.txt", "apple-touch-icon.png", "assets/**/*.*"],
       manifest: {
-        name: "KodeWords",
-        short_name: "KodeWords",
+        name: "kodewords",
+        short_name: "kodewords",
         description: "A fun word game.",
         theme_color: "#000000",
         background_color: "#000000",
         display: "standalone",
-        scope: "/KodeWords/",
-        start_url: "/KodeWords/",
+        scope: "/kodewords/",
+        start_url: "/kodewords/",
         icons: [
           {
             src: "logo192.png",

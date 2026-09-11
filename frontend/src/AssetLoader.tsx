@@ -2,19 +2,19 @@ import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
 const assets = [
-  "/KodeWords/texture.png",
-  "/KodeWords/assets/agent/blue.png",
-  "/KodeWords/assets/agent/gray.png",
-  "/KodeWords/assets/agent/red.png",
-  "/KodeWords/assets/bg/black.png",
-  "/KodeWords/assets/bg/blue.png",
-  "/KodeWords/assets/bg/gray.png",
-  "/KodeWords/assets/bg/red.png",
-  "/KodeWords/assets/card/black.png",
-  "/KodeWords/assets/card/blue.png",
-  "/KodeWords/assets/card/gray.png",
-  "/KodeWords/assets/card/red.png",
-  "/KodeWords/assets/icon/fullscreen.png",
+  "/kodewords/texture.png",
+  "/kodewords/assets/agent/blue.png",
+  "/kodewords/assets/agent/gray.png",
+  "/kodewords/assets/agent/red.png",
+  "/kodewords/assets/bg/black.png",
+  "/kodewords/assets/bg/blue.png",
+  "/kodewords/assets/bg/gray.png",
+  "/kodewords/assets/bg/red.png",
+  "/kodewords/assets/card/black.png",
+  "/kodewords/assets/card/blue.png",
+  "/kodewords/assets/card/gray.png",
+  "/kodewords/assets/card/red.png",
+  "/kodewords/assets/icon/fullscreen.png",
 ];
 
 function AssetLoader() {
@@ -23,7 +23,7 @@ function AssetLoader() {
   useEffect(() => {
     const preloadAssets = async () => {
       try {
-        const promises = assets.map((asset) => {
+        const promises = assets.map(asset => {
           return new Promise<void>((resolve, reject) => {
             const img = new Image();
             img.src = asset;

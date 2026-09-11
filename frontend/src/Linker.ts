@@ -1,1 +1,1 @@
-export const IMGPATH =  "/KodeWords";
+export const IMGPATH = "/kodewords";
