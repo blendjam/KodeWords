@@ -110,7 +110,6 @@ function Game() {
           <button onClick={handleBack} className=" rounded-lg bg-white px-4 py-1 font-bold text-[#222]">
             HOME
           </button>
-
           <h4
             className={` rounded-md px-2 py-1 font-bold text-white
             ${
@@ -121,17 +120,19 @@ function Game() {
           `}>
             {turn.toUpperCase()}
           </h4>
+          <span className="text-white">Plays First</span>
         </div>
 
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center top-4 left-[50%] translate-x-[-50%] absolute">
           <h1 className="font-bold text-white">{role?.toUpperCase()}</h1>
-          <div className=""></div>
         </div>
         <div className="flex items-center gap-4">
           <span className="rounded bg-black/25 px-4 py-1 text-white text-[clamp(0.7rem, 1.5vw, 1rem)]">
             ID: {roomId}
           </span>
 
+          <div
+            className={`rounded-full size-2 ${connectionStatus === ConnectionStatus.CONNECTED ? "bg-green-400" : "bg-red-500"}`}></div>
           <FullScreenButton />
         </div>
       </nav>
