@@ -1,7 +1,13 @@
+function getRandomID() {
+  if (crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
 export function getUserId(): string {
   let userId = sessionStorage.getItem("userId");
   if (!userId) {
-    const randomUUID = crypto.randomUUID();
+    const randomUUID = getRandomID();
     sessionStorage.setItem("userId", randomUUID);
     userId = randomUUID;
   }
