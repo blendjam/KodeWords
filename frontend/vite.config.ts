@@ -5,7 +5,7 @@ import { VitePWA } from "vite-plugin-pwa";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  base: "/KodeWords/",
+  base: "/kodewords/",
   build: {
     outDir: "build",
   },
