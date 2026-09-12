@@ -3,9 +3,26 @@ import { logger } from "../utils/logger";
 import { handleMessage } from "./message-handler";
 import type { ClientMessage } from "@kodewords/shared/messages";
 import type { Server as HttpServer } from "http";
+import { handleClose } from "./handleClose";
+import { connections } from "./connections";
+
+const HEARTBEAT_INTERVAL = 30_000;
 
 export function createWsServer(server: HttpServer) {
   const wss = new WebSocketServer({ server });
+
+  const interval = setInterval(() => {
+    wss.clients.forEach(socket => {
+      const connection = connections.getConnectionFromSocket(socket);
+      if (!connection) return;
+      if (!connection.getIsAlive()) {
+        socket.terminate();
+        return;
+      }
+      connection.setIsAlive(false);
+      socket.ping();
+    });
+  }, HEARTBEAT_INTERVAL);
 
   wss.on("connection", socket => {
     logger.info("Client Connected");
@@ -24,8 +41,16 @@ export function createWsServer(server: HttpServer) {
       }
     });
 
+    socket.on("pong", () => {
+      const connection = connections.getConnectionFromSocket(socket);
+      if (connection) {
+        connection.setIsAlive(true);
+      }
+    });
+
     socket.on("close", () => {
-      logger.info("Client disconnected");
+      handleClose(socket);
+      clearInterval(interval);
     });
 
     socket.on("error", err => {

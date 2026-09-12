@@ -26,22 +26,23 @@ export class Connections {
   }
 
   updateSocket(userId: string, socket: WebSocket) {
-    if (this.connections.has(userId)) {
-      const connection = this.connections.get(userId);
-      if (connection) {
-        connection.getSocket().close();
-        connection.setSocket(socket);
-      }
-    }
+    const connection = this.getConnection(userId);
+    if (!connection) return;
+    connection.setSocket(socket);
+    connection.setIsAlive(true);
   }
 
   hasUserId(userId: string): boolean {
     return this.connections.has(userId);
   }
 
+  getConnectionFromSocket(socket: WebSocket): Connection | undefined {
+    return Array.from(this.connections.values()).find(conn => conn.getSocket() === socket);
+  }
+
   getPlayerFromSocket(socket: WebSocket): Player | undefined {
-    const connection = Array.from(this.connections.values()).find(conn => conn.getSocket() === socket);
-    return connection?.getPlayer();
+    const conneciton = this.getConnectionFromSocket(socket);
+    return conneciton?.getPlayer();
   }
 
   broadcastToRoom(room: Room, message: string) {

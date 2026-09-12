@@ -1,7 +1,14 @@
 import type { ListType, Player, Room } from "@kodewords/shared/types";
+import { logger } from "../utils/logger";
+
+// id -> is unique number-string combo of the room 123-classic
+// roomId -> is just the number part of the room
+
+const ROOM_EMPTY_TIMEOUT = 5 * 60 * 1000;
 
 export class RoomManager {
   private rooms = new Map<string, Room>();
+  private emptyRoomTimers = new Map<string, NodeJS.Timeout>();
 
   joinRoom(id: string, player: Player, listType: ListType): Room {
     const randomRoomid = Math.floor(100 + Math.random() * 9000).toString();
@@ -16,9 +23,15 @@ export class RoomManager {
         players: new Map(),
         words: [],
         guessedWords: [],
-        listType: listType,
+        listType,
       };
       this.rooms.set(uniqueId, room);
+    }
+
+    const timer = this.emptyRoomTimers.get(uniqueId);
+    if (timer) {
+      clearTimeout(timer);
+      this.emptyRoomTimers.delete(roomId);
     }
 
     for (const [existingRoomId, existingRoom] of this.rooms) {
@@ -51,7 +64,34 @@ export class RoomManager {
     }
 
     room.players.delete(playerId);
+
+    if (room.players.size === 0) {
+      this.scheduleRoomDeletion(id);
+    }
     return room;
+  }
+
+  removePlayer(playerId: string) {
+    const room = this.getRoomByPlayerId(playerId);
+    if (!room) return;
+    this.leaveRoom(room.id, playerId);
+  }
+
+  private scheduleRoomDeletion(id: string) {
+    if (this.emptyRoomTimers.has(id)) return;
+    const timer = setTimeout(() => {
+      const room = this.rooms.get(id);
+
+      if (room && room.players.size === 0) {
+        this.rooms.delete(id);
+        logger.info("Room Expired", {
+          id,
+        });
+      }
+      this.emptyRoomTimers.delete(id);
+    }, ROOM_EMPTY_TIMEOUT);
+
+    this.emptyRoomTimers.set(id, timer);
   }
 
   selectWord(id: string, playerId: string, word: string) {

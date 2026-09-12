@@ -2,13 +2,11 @@ import type { Player } from "@kodewords/shared/types";
 import type WebSocket from "ws";
 
 export class Connection {
-  private socket: WebSocket;
-  private player: Player;
-
-  constructor(socket: WebSocket, player: Player) {
-    this.socket = socket;
-    this.player = player;
-  }
+  constructor(
+    private socket: WebSocket,
+    private player: Player,
+    private isAlive = true,
+  ) {}
 
   getPlayer() {
     return this.player;
@@ -24,5 +22,13 @@ export class Connection {
 
   getSocket() {
     return this.socket;
+  }
+
+  setIsAlive(isAlive: boolean) {
+    this.isAlive = isAlive;
+  }
+
+  getIsAlive() {
+    return this.isAlive;
   }
 }

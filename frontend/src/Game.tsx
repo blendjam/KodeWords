@@ -70,13 +70,16 @@ function generateBoard(roomId: number, listType: ListType, turn: Turn) {
 }
 
 function Game() {
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const clearRoom = useRoomState(state => state.clearRoom);
-  const room = useRoomState(state => state.room);
+
+  const [searchParams] = useSearchParams();
   const roomId = (searchParams.get("id") as string) || getRandomRoomId();
   const role = (searchParams.get("role") as Role) || "operative";
   const listType = (searchParams.get("list") as ListType) || "classic";
+
+  const clearRoom = useRoomState(state => state.clearRoom);
+  const room = useRoomState(state => state.room);
+
   const { connectionStatus, send } = useWs();
 
   useEffect(() => {
@@ -84,10 +87,7 @@ function Game() {
     send({ type: "join_room", roomId, role, listType });
   }, [connectionStatus, listType, role, roomId, send]);
 
-  const turn = useMemo(() => {
-    const seed = room?.roomId ? Number(roomId) : 0;
-    return RNG(seed * 10)() > 0.5 ? "red" : "blue";
-  }, [room, roomId]);
+  const turn = useMemo(() => (RNG(Number(roomId) * 10)() > 0.5 ? "red" : "blue"), [roomId]);
 
   const shuffledWords = useMemo(() => {
     const boardRoomId = room?.roomId ?? roomId;
